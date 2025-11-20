@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import { Ship, TrendingUp, Package, AlertCircle, Plus, Trash2, BarChart3 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+interface CargoItem {
+  name: string;
+  weight: number;
+  profit: number;
+  color: string;
+  ratio?: number;
+  amount?: number;
+  fractional?: boolean;
+  fraction?: string;
+}
+
 
 const FractionalKnapsackDemo = () => {
   const [step, setStep] = useState(0);
-  const [approach, setApproach] = useState('greedy');
-  const [capacity, setCapacity] = useState(50);
-  const [cargo, setCargo] = useState([]);
+  const [approach, setApproach] = useState<string>("greedy");
+  const [capacity, setCapacity] = useState<number>(50);
+  const [cargo, setCargo] = useState<CargoItem[]>([]);
   const [showSimulation, setShowSimulation] = useState(false);
-  
-  // Form state for adding cargo
+
   const [newCargo, setNewCargo] = useState({
-    name: '',
-    weight: '',
-    profit: ''
-  });
+    name: "",
+    weight: "",
+    profit: ""
+});
+
+
 
   const loadSampleData = () => {
     setCargo([
@@ -32,16 +44,20 @@ const FractionalKnapsackDemo = () => {
   ];
 
   const addCargo = () => {
-    if (newCargo.name && newCargo.weight && newCargo.profit) {
-      setCargo([...cargo, {
+  if (newCargo.name && newCargo.weight && newCargo.profit) {
+    setCargo(prev => [
+      ...prev,
+      {
         name: newCargo.name,
         weight: parseFloat(newCargo.weight),
         profit: parseFloat(newCargo.profit),
-        color: colors[cargo.length % colors.length]
-      }]);
-      setNewCargo({ name: '', weight: '', profit: '' });
-    }
-  };
+        color: colors[prev.length % colors.length],
+      },
+    ]);
+    setNewCargo({ name: '', weight: '', profit: '' });
+  }
+};
+
 
   const removeCargo = (index) => {
     setCargo(cargo.filter((_, i) => i !== index));
@@ -181,10 +197,11 @@ const FractionalKnapsackDemo = () => {
     setStep(0);
   };
 
-  const switchApproach = (newApproach) => {
-    setApproach(newApproach);
-    setStep(0);
-  };
+  const switchApproach = (newApproach: string) => {
+  setApproach(newApproach);
+  setStep(0);
+};
+
 
   const cargoWithRatio = cargo.map(item => ({
     ...item,
